@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Översättning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 200px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .main-content {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        .input-section label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .language-selection {
+            margin-bottom: 25px;
+        }
+
+        .language-selection h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .optional-languages {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .language-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .language-checkbox:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .language-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .language-checkbox label {
+            cursor: pointer;
+            font-size: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            margin: 0;
+            user-select: none;
+        }
+
+        .language-checkbox .flag {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .translate-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .translate-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .translate-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .translation-card {
+            background: #f8f9ff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .translation-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .translation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .translation-header .flag {
+            margin-right: 8px;
+            font-size: 24px;
+        }
+
+        .translation-text {
+            color: #333;
+            font-size: 15px;
+            line-height: 1.6;
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            user-select: text;
+            white-space: pre-wrap;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #c62828;
+        }
+
+        @media (max-width: 600px) {
+            .optional-languages {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Översättning</h1>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <label for="sourceText">Text att översätta:</label>
+                <textarea id="sourceText" placeholder="Skriv eller klistra in texten här..."></textarea>
+            </div>
+
+            <div class="language-selection">
+                <h3>Välj språk</h3>
+
+                <div class="optional-languages">
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-urdu" value="urdu">
+                        <label for="lang-urdu"><span class="flag">🇵🇰</span> Urdu</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-english" value="english">
+                        <label for="lang-english"><span class="flag">🇬🇧</span> Engelska</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-greek" value="greek">
+                        <label for="lang-greek"><span class="flag">🇬🇷</span> Grekiska</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-turkish" value="turkish">
+                        <label for="lang-turkish"><span class="flag">🇹🇷</span> Turkiska</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-tigrinya" value="tigrinya">
+                        <label for="lang-tigrinya"><span class="flag">🇪🇷</span> Tigrinja</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-swahili" value="swahili">
+                        <label for="lang-swahili"><span class="flag">🇰🇪</span> Swahili</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-bangla" value="bangla">
+                        <label for="lang-bangla"><span class="flag">🇧🇩</span> Bangla</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-arabic" value="arabic">
+                        <label for="lang-arabic"><span class="flag">🇸🇦</span> Arabiska</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-russian" value="russian">
+                        <label for="lang-russian"><span class="flag">🇷🇺</span> Ryska</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-mandarin" value="mandarin">
+                        <label for="lang-mandarin"><span class="flag">🇨🇳</span> Kinesiska (Mandarin)</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-thai" value="thai">
+                        <label for="lang-thai"><span class="flag">🇹🇭</span> Thailändska</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-mongolian" value="mongolian">
+                        <label for="lang-mongolian"><span class="flag">🇲🇳</span> Mongoliska</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-dari" value="dari">
+                        <label for="lang-dari"><span class="flag">🇦🇫</span> Dari</label>
+                    </div>
+                    <div class="language-checkbox">
+                        <input type="checkbox" id="lang-persian" value="persian">
+                        <label for="lang-persian"><span class="flag">🇮🇷</span> Persiska</label>
+                    </div>
+                </div>
+            </div>
+
+            <button class="translate-button" onclick="translateText()">Översätt</button>
+
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        const languageNames = {
+            spanish: { sv: 'Spanska', en: 'Spanish', flag: '🇪🇸' },
+            ukrainian: { sv: 'Ukrainska', en: 'Ukrainian', flag: '🇺🇦' },
+            urdu: { sv: 'Urdu', en: 'Urdu', flag: '🇵🇰' },
+            english: { sv: 'Engelska', en: 'English', flag: '🇬🇧' },
+            greek: { sv: 'Grekiska', en: 'Greek', flag: '🇬🇷' },
+            turkish: { sv: 'Turkiska', en: 'Turkish', flag: '🇹🇷' },
+            tigrinya: { sv: 'Tigrinja', en: 'Tigrinya', flag: '🇪🇷' },
+            swahili: { sv: 'Swahili', en: 'Swahili', flag: '🇰🇪' },
+            bangla: { sv: 'Bangla', en: 'Bangla', flag: '🇧🇩' },
+            arabic: { sv: 'Arabiska', en: 'Arabic', flag: '🇸🇦' },
+            russian: { sv: 'Ryska', en: 'Russian', flag: '🇷🇺' },
+            mandarin: { sv: 'Kinesiska (Mandarin)', en: 'Mandarin Chinese', flag: '🇨🇳' },
+            thai: { sv: 'Thailändska', en: 'Thai', flag: '🇹🇭' },
+            mongolian: { sv: 'Mongoliska', en: 'Mongolian', flag: '🇲🇳' },
+            dari: { sv: 'Dari', en: 'Dari', flag: '🇦🇫' },
+            persian: { sv: 'Persiska', en: 'Persian (Farsi)', flag: '🇮🇷' }
+        };
+
+        async function translateText() {
+            const sourceText = document.getElementById('sourceText').value.trim();
+            
+            if (!sourceText) {
+                alert('Vänligen skriv in text att översätta.');
+                return;
+            }
+
+            // Get selected languages
+            const selectedLanguages = ['spanish', 'ukrainian']; // Always include these
+            
+            const checkboxes = document.querySelectorAll('.optional-languages input[type="checkbox"]:checked');
+            checkboxes.forEach(cb => {
+                selectedLanguages.push(cb.value);
+            });
+
+            // Show loading
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Översätter till ${selectedLanguages.length} språk...
+                </div>
+            `;
+
+            // Disable button
+            const button = document.querySelector('.translate-button');
+            button.disabled = true;
+
+            try {
+                const translations = {};
+                
+                // Translate to each language
+                for (const lang of selectedLanguages) {
+                    const translation = await translateToLanguage(sourceText, lang);
+                    translations[lang] = translation;
+                }
+
+                // Display results
+                displayTranslations(translations);
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error">
+                        <strong>Ett fel uppstod:</strong> ${error.message}
+                    </div>
+                `;
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        async function translateToLanguage(text, targetLang) {
+            const langName = languageNames[targetLang].en;
+            
+            let languageInstructions = '';
+            if (targetLang === 'spanish') {
+                languageInstructions = 'Use Latin American Spanish (español latinoamericano), NOT European Spanish. ';
+            } else if (targetLang === 'swahili') {
+                languageInstructions = 'Use Kenyan Swahili variant. ';
+            } else if (targetLang === 'arabic') {
+                languageInstructions = 'Use Modern Standard Arabic (الفصحى). ';
+            } else if (targetLang === 'mandarin') {
+                languageInstructions = 'Use Simplified Chinese characters (简体中文). ';
+            }
+            
+            const response = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-20250514',
+                    max_tokens: 1000,
+                    messages: [{
+                        role: 'user',
+                        content: `You are a professional translator specializing in educational content. Translate the following Swedish text to ${langName}. 
+
+Important guidelines:
+- ${languageInstructions}Maintain the appropriate tone for a school/classroom setting
+- Keep any formatting (line breaks, lists, etc.)
+- Ensure the translation is culturally appropriate for students
+- Use natural, everyday language that students would understand
+- For educational terms, use the standard terms used in schools
+
+Text to translate:
+${text}
+
+Provide ONLY the translation, without any preamble or explanation.`
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Översättning till ${langName} misslyckades`);
+            }
+
+            const data = await response.json();
+            return data.content[0].text.trim();
+        }
+
+        function displayTranslations(translations) {
+            const resultsDiv = document.getElementById('results');
+            let html = '';
+
+            for (const [lang, translation] of Object.entries(translations)) {
+                const langInfo = languageNames[lang];
+                html += `
+                    <div class="translation-card">
+                        <div class="translation-header">
+                            <span class="flag">${langInfo.flag}</span>
+                            ${langInfo.sv}
+                        </div>
+                        <div class="translation-text">
+                            ${translation.replace(/\n/g, '<br>')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
