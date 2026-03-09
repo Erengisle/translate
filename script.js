@@ -20,12 +20,20 @@ Persian:"fa"
 
 async function translate(){
 
-const text = document.getElementById("sourceText").value
+const text = document.getElementById("sourceText").value.trim()
+
+if(!text){
+alert("Please enter text")
+return
+}
 
 const prompt =
 "Translate the following Swedish text for school communication into these languages: " +
 Object.keys(languages).join(", ") +
-". Use natural everyday language suitable for school communication. Return JSON exactly like {language:text}.";
+". Use natural everyday language suitable for school communication. Return ONLY JSON exactly like {language:text}."
+
+try{
+
 const response = await fetch("https://api.anthropic.com/v1/messages",{
 
 method:"POST",
@@ -40,7 +48,7 @@ body:JSON.stringify({
 
 model:"claude-3-5-sonnet-20241022",
 
-max_tokens:1000,
+max_tokens:1200,
 
 messages:[{
 role:"user",
@@ -53,20 +61,21 @@ content:prompt + "\n\nTEXT:\n" + text
 
 const data = await response.json()
 
-let translations
+const raw = data.content[0].text
 
-try{
+const jsonStart = raw.indexOf("{")
+const jsonEnd = raw.lastIndexOf("}") + 1
 
-translations = JSON.parse(data.content[0].text)
-
-}catch{
-
-alert("Translation error")
-return
-
-}
+const translations = JSON.parse(raw.slice(jsonStart,jsonEnd))
 
 showTranslations(translations)
+
+}catch(err){
+
+console.error(err)
+alert("Translation failed")
+
+}
 
 }
 
@@ -122,8 +131,8 @@ encodeURIComponent(text)
 
 new QRCode(element,{
 text:url,
-width:140,
-height:140
+width:180,
+height:180
 })
 
 }
