@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Översättning</title>
+<style>
+body{font-family:Arial,sans-serif;padding:30px;background:#f9f9f9;}
+h2{margin-bottom:15px;}
+.translation-box{background:white;padding:20px;border-radius:10px;border:1px solid #ddd;}
+</style>
+</head>
+<body>
+
+<h2>Översättning</h2>
+<div id="translation" class="translation-box"></div>
+
+<script>
+function getQueryParam(param){
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param) || "";
+}
+
+document.getElementById("translation").innerText = getQueryParam("text");
+</script>
+
+</body>
+</html>
