@@ -17,17 +17,15 @@ Dari:"fa-AF",
 Persian:"fa"
 
 }
-}
 
 async function translate(){
 
 const text = document.getElementById("sourceText").value
 
 const prompt =
-"Translate the following Swedish text for school communication into these languages: Ukrainian, Spanish (Latin American), English, Arabic, Urdu, Bangla, Turkish, Tigrinya, Thai, Russian, Chinese (Simplified Mandarin), Mongolian, Dari, Persian. Use natural everyday language. Return JSON exactly like {language:text}.";
+"Translate the following Swedish text for school communication into these languages: " +
 Object.keys(languages).join(", ") +
-". Return JSON like {language:text}."
-
+". Use natural everyday language suitable for school communication. Return JSON exactly like {language:text}.";
 const response = await fetch("https://api.anthropic.com/v1/messages",{
 
 method:"POST",
