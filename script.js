@@ -24,7 +24,7 @@ async function translate(){
 const text = document.getElementById("sourceText").value
 
 const prompt =
-"Translate the following Swedish text into: " +
+"Translate the following Swedish text for school communication into these languages: Ukrainian, Spanish (Latin American), English, Arabic, Urdu, Bangla, Turkish, Tigrinya, Thai, Russian, Chinese (Simplified Mandarin), Mongolian, Dari, Persian. Use natural everyday language. Return JSON exactly like {language:text}.";
 Object.keys(languages).join(", ") +
 ". Return JSON like {language:text}."
 
