@@ -72,5 +72,13 @@ margin-top:10px;
 
 <script src="script.js"></script>
 
+<script>
+document.getElementById("sourceText").addEventListener("keydown",function(e){
+if(e.ctrlKey && e.key==="Enter"){
+translate()
+}
+})
+</script>
+
 </body>
 </html>
