@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Translation</title>
+
+<style>
+
+body{
+font-family:Arial;
+padding:30px;
+background:#f5f5f5;
+}
+
+.lang{
+font-size:18px;
+color:gray;
+margin-bottom:10px;
+}
+
+.text{
+font-size:28px;
+line-height:1.5;
+background:white;
+padding:25px;
+border-radius:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="lang" id="lang"></div>
+
+<div class="text" id="text"></div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search)
+
+const text = params.get("text")
+const lang = params.get("lang")
+
+document.getElementById("text").innerText = decodeURIComponent(text || "")
+document.getElementById("lang").innerText = lang || ""
+
+</script>
+
+</body>
+
+</html>
