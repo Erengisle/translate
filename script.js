@@ -65,7 +65,7 @@ async function translate() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": "YOUR_API_KEY",  // <--- Lägg in din Claude-API-nyckel
+          "x-api-key": "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",  // <--- Lägg in din Claude-API-nyckel
           "anthropic-version": "2023-06-01"
         },
         body: JSON.stringify({
