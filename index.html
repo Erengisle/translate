@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Teacher Translator</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+padding:30px;
+background:#f2f2f2;
+}
+
+textarea{
+width:100%;
+height:120px;
+font-size:16px;
+padding:10px;
+}
+
+button{
+padding:12px 20px;
+font-size:16px;
+margin-top:10px;
+cursor:pointer;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+gap:20px;
+margin-top:30px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:10px;
+}
+
+.translation{
+margin-top:10px;
+font-size:16px;
+}
+
+.qr{
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Teacher Translation Tool</h2>
+
+<textarea id="sourceText" placeholder="Write Swedish text here"></textarea>
+
+<br>
+
+<button onclick="translate()">Translate</button>
+<button onclick="printQR()">Print QR sheet</button>
+
+<div id="results" class="grid"></div>
+
+<script src="script.js"></script>
+
+<script>
+document.getElementById("sourceText").addEventListener("keydown",function(e){
+if(e.ctrlKey && e.key==="Enter"){
+translate()
+}
+})
+</script>
+
+</body>
+</html>
