@@ -1,27 +1,50 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Översättning</title>
+
 <style>
-body{font-family:Arial,sans-serif;padding:30px;background:#f9f9f9;}
-h2{margin-bottom:15px;}
-.translation-box{background:white;padding:20px;border-radius:10px;border:1px solid #ddd;}
-</style>
-</head>
-<body>
 
-<h2>Översättning</h2>
-<div id="translation" class="translation-box"></div>
-
-<script>
-function getQueryParam(param){
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param) || "";
+body{
+font-family:Arial;
+text-align:center;
+margin-top:80px;
+padding:20px;
 }
 
-document.getElementById("translation").innerText = getQueryParam("text");
+.lang{
+font-size:28px;
+margin-bottom:30px;
+}
+
+.text{
+font-size:24px;
+max-width:700px;
+margin:auto;
+line-height:1.5;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="lang" id="lang"></div>
+
+<div class="text" id="text"></div>
+
+<script>
+
+const params = new URLSearchParams(location.search);
+
+document.getElementById("lang").innerText=params.get("lang");
+
+document.getElementById("text").innerText=params.get("text");
+
 </script>
 
 </body>
