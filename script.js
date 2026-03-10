@@ -24,7 +24,7 @@ results.innerHTML=""
 let languages={...defaultLanguages}
 
 document.querySelectorAll("input[type=checkbox]:checked")
-.forEach(cb=>languages[cb.parentNode.innerText.trim()]=cb.value)
+.forEach(cb=>languages[cb.parentNode.textContent.trim()]=cb.value)
 
 for(const label in languages){
 
