@@ -1,81 +1,144 @@
-const endpoint = "https://nyqxplfhrzydxnwhvhco.supabase.co/functions/v1/translate";
+const endpoint="https://nyqxplfhrzydxnwhvhco.supabase.co/functions/v1/translate"
 
-const defaultLanguages = {
-  "Ukrainska":"Ukrainian",
-  "Spanska":"Spanish"
-};
+const supabase="https://nyqxplfhrzydxnwhvhco.supabase.co"
+
+const anon="DIN_SUPABASE_ANON_KEY"
+
+const defaultLanguages={
+"Ukrainska":"Ukrainian",
+"Spanska":"Spanish"
+}
+
+loadFavorites()
 
 async function translate(){
 
-const text = document.getElementById("text").value;
+const text=document.getElementById("text").value
 
-if(!text){
-alert("Skriv text först");
-return;
-}
+if(!text)return alert("Skriv text")
 
-const results = document.getElementById("results");
-results.innerHTML="";
+const results=document.getElementById("results")
 
-let languages = {...defaultLanguages};
+results.innerHTML=""
+
+let languages={...defaultLanguages}
 
 document.querySelectorAll("input[type=checkbox]:checked")
-.forEach(cb=>{
-languages[cb.parentNode.innerText.trim()] = cb.value;
-});
+.forEach(cb=>languages[cb.parentNode.innerText.trim()]=cb.value)
 
 for(const label in languages){
 
-const language = languages[label];
-
-const res = await fetch(endpoint,{
+const res=await fetch(endpoint,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
 text:text,
-language:language
+language:languages[label]
 })
-});
+})
 
-const data = await res.json();
+const data=await res.json()
 
-const translation = data.translation;
-
-createCard(label,translation);
+createCard(label,data.translation,data.id)
 
 }
 
 }
 
-function createCard(language,translation){
+function createCard(lang,translation,id){
 
-const container = document.getElementById("results");
+const container=document.getElementById("results")
 
-const card = document.createElement("div");
-card.className="card";
+const card=document.createElement("div")
 
-const lang = document.createElement("div");
-lang.className="lang";
-lang.innerText=language;
+card.className="card"
 
-const text = document.createElement("div");
-text.innerText=translation;
+const title=document.createElement("div")
+title.className="lang"
+title.innerText=lang
 
-const qr = document.createElement("div");
-
-const url =
-`view.html?text=${encodeURIComponent(translation)}&lang=${encodeURIComponent(language)}`;
+const qr=document.createElement("div")
 
 new QRCode(qr,{
-text:url,
+text:`view.html?id=${id}`,
 width:150,
 height:150
-});
+})
 
-card.appendChild(lang);
-card.appendChild(qr);
-card.appendChild(text);
+const text=document.createElement("div")
+text.className="translation"
+text.innerText=translation
 
-container.appendChild(card);
+card.appendChild(title)
+card.appendChild(qr)
+card.appendChild(text)
+
+container.appendChild(card)
+
+}
+
+async function saveFavorite(){
+
+const text=document.getElementById("text").value
+
+await fetch(`${supabase}/rest/v1/favorites`,{
+method:"POST",
+headers:{
+apikey:anon,
+Authorization:`Bearer ${anon}`,
+"Content-Type":"application/json"
+},
+body:JSON.stringify({text:text})
+})
+
+loadFavorites()
+
+}
+
+async function loadFavorites(){
+
+const res=await fetch(`${supabase}/rest/v1/favorites?select=*`,{
+headers:{
+apikey:anon,
+Authorization:`Bearer ${anon}`
+}
+})
+
+const data=await res.json()
+
+const select=document.getElementById("favorites")
+
+select.innerHTML="<option>Favoriter</option>"
+
+data.forEach(f=>{
+
+const option=document.createElement("option")
+
+option.value=f.text
+option.innerText=f.text
+
+select.appendChild(option)
+
+})
+
+select.onchange=e=>{
+document.getElementById("text").value=e.target.value
+}
+
+}
+
+function printQR(){
+
+const cards=[...document.querySelectorAll(".card")]
+
+let html=""
+
+cards.forEach(c=>{
+html+=c.outerHTML
+})
+
+localStorage.setItem("qrprint",html)
+
+window.open("print.html")
 
 }
