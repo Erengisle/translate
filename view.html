@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html>
 <head>
 
 <meta charset="UTF-8">
@@ -9,22 +9,21 @@
 <style>
 
 body{
+
 font-family:Arial;
 text-align:center;
 margin-top:80px;
 padding:20px;
-}
 
-.lang{
-font-size:28px;
-margin-bottom:30px;
 }
 
 .text{
-font-size:24px;
+
+font-size:26px;
 max-width:700px;
 margin:auto;
 line-height:1.5;
+
 }
 
 </style>
@@ -33,17 +32,33 @@ line-height:1.5;
 
 <body>
 
-<div class="lang" id="lang"></div>
-
-<div class="text" id="text"></div>
+<div id="text" class="text"></div>
 
 <script>
 
-const params = new URLSearchParams(location.search);
+const supabase="https://nyqxplfhrzydxnwhvhco.supabase.co"
 
-document.getElementById("lang").innerText=params.get("lang");
+const anon="DIN_SUPABASE_ANON_KEY"
 
-document.getElementById("text").innerText=params.get("text");
+const params=new URLSearchParams(location.search)
+
+const id=params.get("id")
+
+fetch(`${supabase}/rest/v1/translations?id=eq.${id}&select=translation`,{
+
+headers:{
+apikey:anon,
+Authorization:`Bearer ${anon}`
+}
+
+})
+
+.then(r=>r.json())
+.then(d=>{
+
+document.getElementById("text").innerText=d[0].translation
+
+})
 
 </script>
 
