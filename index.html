@@ -2,103 +2,75 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Översättning - Lärarverktyg</title>
+<title>Snabb översättning för skola</title>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <style>
-body{font-family:Arial,sans-serif;padding:30px;background:#f2f2f2;}
-textarea{width:100%;height:120px;font-size:16px;padding:10px;margin-bottom:15px;}
-button{padding:12px 20px;font-size:16px;margin-top:10px;cursor:pointer;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;margin-top:30px;}
-.card{background:white;padding:15px;border-radius:10px;}
-.translation{margin-top:10px;font-size:16px;}
-.qr{margin-top:10px;}
+body{
+font-family:Arial;
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+textarea{
+width:100%;
+height:120px;
+font-size:16px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+margin-top:10px;
+}
+
+.qrgrid{
+display:grid;
+grid-template-columns:repeat(auto-fill,200px);
+gap:25px;
+margin-top:30px;
+}
+
+.card{
+border:1px solid #ccc;
+padding:10px;
+text-align:center;
+}
+
+.lang{
+font-weight:bold;
+margin-bottom:10px;
+}
 </style>
+
 </head>
+
 <body>
 
-<h2>🌍 Läraröversättare</h2>
-<textarea id="sourceText" placeholder="Skriv in texten som ska översättas här..."></textarea><br>
+<h2>Skolöversättare</h2>
+
+<p>Skriv text på svenska:</p>
+
+<textarea id="text"></textarea>
+
+<h3>Extra språk</h3>
+
+<label><input type="checkbox" value="Arabic"> Arabiska</label><br>
+<label><input type="checkbox" value="Somali"> Somaliska</label><br>
+<label><input type="checkbox" value="Tigrinya"> Tigrinja</label><br>
+<label><input type="checkbox" value="Dari"> Dari</label><br>
+<label><input type="checkbox" value="Persian"> Persiska</label><br>
+<label><input type="checkbox" value="Turkish"> Turkiska</label><br>
+
+<br>
 
 <button onclick="translate()">Översätt</button>
-<button onclick="printQR()">Skriv ut QR-koder</button>
 
-<div id="results" class="grid"></div>
+<div id="results" class="qrgrid"></div>
 
-<script>
-const languages = {
-  Ukrainian:"uk",
-  Spanish_Latin_America:"es",
-  English:"en",
-  Arabic:"ar",
-  Urdu:"ur",
-  Bangla:"bn",
-  Turkish:"tr",
-  Tigrinya:"ti",
-  Thai:"th",
-  Russian:"ru",
-  Chinese_Mandarin:"zh",
-  Mongolian:"mn",
-  Dari:"fa-AF",
-  Persian:"fa"
-};
+<script src="script.js"></script>
 
-// Språk som alltid översätts
-const defaultLanguages = ["Ukrainian","Spanish_Latin_America"];
-
-async function translate() {
-  const text = document.getElementById("sourceText").value.trim();
-  if(!text) { alert("Skriv in text att översätta."); return; }
-
-  const selectedLanguages = [...defaultLanguages];
-  for(const lang in languages){
-    const cb = document.getElementById(`lang-${lang}`);
-    if(cb && cb.checked && !selectedLanguages.includes(lang)) selectedLanguages.push(lang);
-  }
-
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "Översätter...";
-
-  try {
-    const translations = {};
-    for(const lang of selectedLanguages){
-      const res = await fetch("/functions/v1/translate", {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({ text, language: languages[lang] })
-      });
-      if(!res.ok) throw new Error("Fel vid översättning");
-      const data = await res.json();
-      translations[lang] = data.translation;
-    }
-    showTranslations(translations);
-  } catch(err){
-    resultsDiv.innerHTML = "Fel vid översättning: "+err.message;
-  }
-}
-
-function showTranslations(translations){
-  const container = document.getElementById("results");
-  container.innerHTML="";
-  for(const lang in translations){
-    const text = translations[lang];
-    const card = document.createElement("div"); card.className="card";
-    const title = document.createElement("h3"); title.innerText = lang;
-    const t = document.createElement("div"); t.className="translation"; t.innerText=text;
-    const copy = document.createElement("button"); copy.innerText="Kopiera"; copy.onclick=()=>navigator.clipboard.writeText(text);
-    const qr = document.createElement("div"); qr.className="qr";
-    card.appendChild(title); card.appendChild(t); card.appendChild(copy); card.appendChild(qr);
-    container.appendChild(card);
-    createQR(text, lang, qr);
-  }
-}
-
-function createQR(text, lang, element){
-  const url = window.location.origin + "/view.html?lang="+encodeURIComponent(lang)+"&text="+encodeURIComponent(text);
-  new QRCode(element,{text:url,width:140,height:140});
-}
-
-function printQR(){ window.print(); }
-</script>
 </body>
 </html>
