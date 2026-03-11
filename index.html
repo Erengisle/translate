@@ -1,41 +1,35 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-
 <meta charset="UTF-8">
-<title>Översättningsverktyg</title>
-
+<title>Translate Mars</title>
 <link rel="stylesheet" href="style.css">
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
 </head>
 
 <body>
 
-<div class="container">
+<h1>Översättningsverktyg</h1>
 
-<div class="header">
-<h1>🌍 Översättning</h1>
-</div>
+<textarea id="text" placeholder="Skriv svensk text"></textarea>
 
-<div class="card">
+<div class="controls">
 
-<label>Text att översätta</label>
+<button onclick="translate()">Översätt</button>
+<button onclick="printQR()">Skriv ut QR</button>
 
-<textarea id="text" placeholder="Skriv eller klistra in text här..."></textarea>
-
-<h3>Välj språk</h3>
-
-<div id="languages" class="languageGrid"></div>
-
-<button id="translateBtn" onclick="translate()">Översätt</button>
+<select id="favorites"></select>
+<button onclick="saveFavorite()">Spara favorit</button>
 
 </div>
 
-<div id="results" class="results"></div>
+<h2>Språk</h2>
 
-</div>
+<div id="languages"></div>
+
+<h2>Översättningar</h2>
+
+<div id="results"></div>
 
 <script src="script.js"></script>
 
