@@ -1,53 +1,113 @@
 body{
 
-font-family:Arial;
+font-family:Arial, sans-serif;
+background:linear-gradient(135deg,#7c3aed,#5b21b6);
+margin:0;
+padding:20px;
+
+}
+
+.container{
+
 max-width:900px;
 margin:auto;
+
+}
+
+.header{
+
+background:white;
 padding:20px;
+border-radius:20px 20px 0 0;
+
+}
+
+.card{
+
+background:white;
+padding:30px;
+border-radius:0 0 20px 20px;
 
 }
 
 textarea{
 
 width:100%;
-height:120px;
+min-height:120px;
+padding:15px;
 font-size:16px;
-margin:10px 0;
+border:2px solid #ddd;
+border-radius:10px;
+margin-bottom:20px;
 
 }
 
-.buttons button{
-
-margin-right:10px;
-padding:10px 15px;
-font-size:16px;
-
-}
-
-.languages{
-
-margin:15px 0;
-
-}
-
-.qrgrid{
+.languageGrid{
 
 display:grid;
-grid-template-columns:repeat(auto-fill,200px);
-gap:25px;
-margin-top:25px;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:10px;
+margin-bottom:20px;
 
 }
 
-.card{
+.language{
 
-border:1px solid #ddd;
+border:2px solid #ddd;
 padding:10px;
-text-align:center;
+border-radius:10px;
+cursor:pointer;
+display:flex;
+align-items:center;
+gap:10px;
 
 }
 
-.lang{
+.language:hover{
+
+border-color:#7c3aed;
+background:#f5f3ff;
+
+}
+
+button{
+
+width:100%;
+padding:15px;
+font-size:16px;
+background:linear-gradient(90deg,#7c3aed,#5b21b6);
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
+
+}
+
+.results{
+
+margin-top:30px;
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+gap:20px;
+
+}
+
+.resultCard{
+
+background:white;
+border-radius:10px;
+padding:15px;
+border:2px solid #ddd;
+
+}
+
+.resultHeader{
 
 font-weight:bold;
 margin-bottom:10px;
@@ -57,6 +117,6 @@ margin-bottom:10px;
 .translation{
 
 margin-top:10px;
-font-size:14px;
+line-height:1.5;
 
 }
