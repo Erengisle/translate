@@ -1,42 +1,41 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
+
 <meta charset="UTF-8">
-<title>Skolöversättare</title>
+<title>Översättningsverktyg</title>
+
 <link rel="stylesheet" href="style.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 </head>
 
 <body>
 
-<h1>Skolöversättare</h1>
+<div class="container">
 
-<label>Favoriter</label>
-<select id="favorites"></select>
-
-<textarea id="text" placeholder="Skriv svensk text här"></textarea>
-
-<div class="buttons">
-<button onclick="translate()">Översätt</button>
-<button onclick="saveFavorite()">⭐ Spara favorit</button>
-<button onclick="printQR()">🖨 QR-ark</button>
+<div class="header">
+<h1>🌍 Översättning</h1>
 </div>
 
-<h3>Extra språk</h3>
+<div class="card">
 
-<div class="languages">
+<label>Text att översätta</label>
 
-<label><input type="checkbox" value="Arabic"> Arabiska</label>
-<label><input type="checkbox" value="Somali"> Somaliska</label>
-<label><input type="checkbox" value="Tigrinya"> Tigrinja</label>
-<label><input type="checkbox" value="Dari"> Dari</label>
-<label><input type="checkbox" value="Persian"> Persiska</label>
-<label><input type="checkbox" value="Turkish"> Turkiska</label>
+<textarea id="text" placeholder="Skriv eller klistra in text här..."></textarea>
+
+<h3>Välj språk</h3>
+
+<div id="languages" class="languageGrid"></div>
+
+<button id="translateBtn" onclick="translate()">Översätt</button>
 
 </div>
 
-<div id="results" class="qrgrid"></div>
+<div id="results" class="results"></div>
+
+</div>
 
 <script src="script.js"></script>
 
