@@ -1,25 +1,46 @@
 <!DOCTYPE html>
 <html lang="sv">
+
 <head>
 <meta charset="UTF-8">
 <title>Translate Mars</title>
+
 <link rel="stylesheet" href="style.css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 </head>
 
 <body>
 
-<h1>Översättningsverktyg</h1>
+<div class="container">
 
-<textarea id="text" placeholder="Skriv svensk text"></textarea>
+<h1>🌍 Translate Mars</h1>
 
-<div class="controls">
+<textarea id="text" placeholder="Skriv svensk text här..."></textarea>
+
+<div class="buttons">
 
 <button onclick="translate()">Översätt</button>
+
+<button onclick="translateAll()">Alla språk</button>
+
 <button onclick="printQR()">Skriv ut QR</button>
+
+</div>
 
 <select id="favorites"></select>
 <button onclick="saveFavorite()">Spara favorit</button>
+
+<h2>Snabbfraser</h2>
+
+<div class="phrases">
+
+<button onclick="quick('Ta fram datorn')">Ta fram datorn</button>
+<button onclick="quick('Arbeta tyst')">Arbeta tyst</button>
+<button onclick="quick('Vi börjar lektionen')">Vi börjar lektionen</button>
+<button onclick="quick('Lämna in uppgiften')">Lämna in uppgiften</button>
+<button onclick="quick('Öppna Classroom')">Öppna Classroom</button>
 
 </div>
 
@@ -31,7 +52,10 @@
 
 <div id="results"></div>
 
+</div>
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
