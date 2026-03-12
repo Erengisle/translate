@@ -32,6 +32,7 @@ let selected = {
   english: false,
   turkish: false,
   dari: false,
+  mongolian: false,
   persian: false,
   thai: false,
   russian: false
@@ -49,7 +50,7 @@ function init() {
   window.translate = translate // backward compatibility for cached HTML
   window.translateAll = translateAll
   window.saveFavorite = saveFavorite
-  window.printQR = printQR
+  
 }
 
 
@@ -156,12 +157,7 @@ function createCard(lang, translation, id) {
 
   const qr = document.createElement("div")
 
-  if (id) {
-    new QRCode(qr, {
-      text: new URL(`view.html?id=${id}`, window.location.href).toString(),
-      width: 140,
-      height: 140
-    })
+   })
   }
 
   const text = document.createElement("div")
@@ -180,8 +176,7 @@ function createCard(lang, translation, id) {
   tools.appendChild(copy)
 
   card.appendChild(title)
-  card.appendChild(qr)
-  card.appendChild(text)
+   card.appendChild(text)
   card.appendChild(tools)
 
   container.appendChild(card)
