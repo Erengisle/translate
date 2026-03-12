@@ -15,6 +15,7 @@ const optionalLanguages = {
   english: "Engelska",
   turkish: "Turkiska",
   dari: "Dari",
+  mongolian: "Mongoliska"
   persian: "Persiska",
   thai: "Thailändska",
   russian: "Ryska"
@@ -50,6 +51,7 @@ function init() {
   window.saveFavorite = saveFavorite
   window.printQR = printQR
 }
+
 
 function translate() {
   return runTranslate()
@@ -156,7 +158,7 @@ function createCard(lang, translation, id) {
 
   if (id) {
     new QRCode(qr, {
-      text: `view.html?id=${id}`,
+      text: new URL(`view.html?id=${id}`, window.location.href).toString(),
       width: 140,
       height: 140
     })
@@ -175,17 +177,7 @@ function createCard(lang, translation, id) {
   copy.onclick = () => {
     navigator.clipboard.writeText(translation)
   }
-
-  const speak = document.createElement("button")
-  speak.innerText = "🔊"
-
-  speak.onclick = () => {
-    const u = new SpeechSynthesisUtterance(translation)
-    speechSynthesis.speak(u)
-  }
-
   tools.appendChild(copy)
-  tools.appendChild(speak)
 
   card.appendChild(title)
   card.appendChild(qr)
