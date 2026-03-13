@@ -47,18 +47,6 @@ let selected = {
 }
 
 init()
-
-function init() {
-  const saved = sessionStorage.getItem("auth")
-  if (saved !== "ok") {
-    const pw = prompt("Ange lösenord:")
-    if (pw !== "DITT_LÖSENORD") {
-      document.body.innerHTML = "<p style='font-family:sans-serif;padding:40px;color:#888'>Fel lösenord.</p>"
-      return
-    }
-    sessionStorage.setItem("auth", "ok")
-  }
-
   createLanguageGrid()
   loadFavorites()
 
