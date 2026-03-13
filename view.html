@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Håkans översättningar</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -12,74 +12,187 @@ body {
   background: #f5f4f0;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 32px 20px;
 }
+
 .card {
-  max-width: 640px;
+  max-width: 600px;
   width: 100%;
-  background: #fff;
-  border: 1px solid #e4e2dd;
-  border-radius: 24px;
-  padding: 48px 44px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-  text-align: center;
   animation: up 0.4s ease both;
 }
 @keyframes up {
   from { opacity:0; transform: translateY(20px); }
   to   { opacity:1; transform: translateY(0); }
 }
+
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #5b4bff;
-  background: rgba(91,75,255,0.08);
-  padding: 5px 14px;
-  border-radius: 100px;
-  margin-bottom: 28px;
+  color: #8a8a9a;
+  margin-bottom: 20px;
 }
-.text {
-  font-size: clamp(22px, 4vw, 32px);
-  font-weight: 500;
+
+/* Original text box */
+.box {
+  background: #fff;
+  border: 1px solid #e4e2dd;
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.box-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #bbbbc8;
+  margin-bottom: 10px;
+}
+.box-text {
+  font-size: clamp(18px, 3.5vw, 26px);
+  font-weight: 400;
   line-height: 1.6;
   color: #1a1a2e;
 }
-.loading { color: #bbbbc8; font-style: italic; font-weight: 400; }
+
+/* Translation box */
+.box.translation-box {
+  border-color: rgba(91,75,255,0.2);
+  background: rgba(91,75,255,0.03);
+}
+.box.translation-box .box-label {
+  color: #5b4bff;
+}
+.box.translation-box .box-text {
+  font-weight: 500;
+}
+
+.lang-tag {
+  display: inline-block;
+  background: rgba(91,75,255,0.1);
+  color: #5b4bff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-left: 8px;
+  vertical-align: middle;
+  letter-spacing: 0.03em;
+}
+
+/* Save button */
+.save-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  background: #5b4bff;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+.save-btn:hover { background: #4538e0; transform: translateY(-1px); }
+.save-btn:active { transform: translateY(0); }
+
 .footer {
-  margin-top: 32px;
+  margin-top: 24px;
   font-size: 12px;
   color: #bbbbc8;
+  text-align: center;
 }
+
+.error { color: #e05; font-style: italic; }
 </style>
 </head>
 <body>
+
 <div class="card">
-  <div class="badge">🌍 Översättning</div>
-  <div id="text" class="text"><span class="loading">Hämtar…</span></div>
+  <div class="badge">🌍 Håkans översättningar</div>
+
+  <div class="box" id="orig-box">
+    <div class="box-label">Originaltext (svenska)</div>
+    <div class="box-text" id="orig-text">…</div>
+  </div>
+
+  <div class="box translation-box" id="trans-box">
+    <div class="box-label">
+      Översättning
+      <span class="lang-tag" id="lang-tag"></span>
+    </div>
+    <div class="box-text" id="trans-text">…</div>
+  </div>
+
+  <a class="save-btn" id="save-btn" href="#" target="_blank">
+    📎 Spara i Google Keep
+  </a>
+
   <div class="footer">Håkans översättningar</div>
 </div>
+
 <script>
-const supabase = "https://nyqxplfhrzydxnwhvhco.supabase.co"
-const anon = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55cXhwbGZocnp5ZHhud2h2aGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwODI5MTgsImV4cCI6MjA4ODY1ODkxOH0.zaWJIBgJahhU4KphbalcKc_RVL6kq1irTs6C074bgW0"
 const params = new URLSearchParams(location.search)
-const id = params.get("id")
-fetch(`${supabase}/rest/v1/translations?id=eq.${id}&select=translation`, {
-  headers: { apikey: anon, Authorization: `Bearer ${anon}` }
-})
-.then(r => r.json())
-.then(d => {
-  document.getElementById("text").innerText = d[0]?.translation ?? "Översättning hittades inte."
-})
-.catch(() => {
-  document.getElementById("text").innerText = "Kunde inte hämta översättning."
-})
+
+function decodeParam(key) {
+  try {
+    return decodeURIComponent(escape(atob(decodeURIComponent(params.get(key) || ""))))
+  } catch {
+    return ""
+  }
+}
+
+const lang  = params.get("lang") || ""
+const orig  = decodeParam("orig")
+const trans = decodeParam("trans")
+
+if (orig && trans) {
+  document.getElementById("orig-text").innerText  = orig
+  document.getElementById("trans-text").innerText = trans
+  document.getElementById("lang-tag").innerText   = lang
+
+  // Google Keep-länk med texten förifylld
+  const keepText = `${lang}:\n${trans}\n\n(Svenska: ${orig})`
+  document.getElementById("save-btn").href =
+    "https://keep.google.com/#NOTE?title=" +
+    encodeURIComponent("Översättning – " + lang) +
+    "&text=" + encodeURIComponent(keepText)
+} else {
+  // Fallback: försök Supabase om ?id= finns (bakåtkompatibilitet)
+  const id = params.get("id")
+  if (id) {
+    const supabase = "https://nyqxplfhrzydxnwhvhco.supabase.co"
+    const anon = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55cXhwbGZocnp5ZHhud2h2aGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwODI5MTgsImV4cCI6MjA4ODY1ODkxOH0.zaWJIBgJahhU4KphbalcKc_RVL6kq1irTs6C074bgW0"
+    fetch(`${supabase}/rest/v1/translations?id=eq.${id}&select=translation`, {
+      headers: { apikey: anon, Authorization: `Bearer ${anon}` }
+    })
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById("trans-text").innerText = d[0]?.translation ?? "Hittades inte."
+      document.getElementById("orig-box").style.display = "none"
+    })
+    .catch(() => {
+      document.getElementById("trans-text").innerText = "Kunde inte hämta."
+    })
+  } else {
+    document.getElementById("orig-text").classList.add("error")
+    document.getElementById("orig-text").innerText = "Ingen översättning hittades."
+  }
+}
 </script>
 </body>
 </html>
