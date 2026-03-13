@@ -1,49 +1,73 @@
 <!DOCTYPE html>
 <html lang="sv">
-
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Håkans översättningar</title>
-
 <link rel="stylesheet" href="style.css">
-
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
 <div class="container">
 
-<h1>🌍 Translate Mars</h1>
+  <header>
+    <div class="logo">
+      <span class="logo-icon">🌍</span>
+      <span class="logo-text">Håkans översättningar</span>
+    </div>
+  </header>
 
-<textarea id="text" placeholder="Skriv svensk text här..."></textarea>
+  <main>
+    <div class="hero-text">
+      <h1>Håkans<br>översättningar</h1>
+    </div>
 
-<div class="buttons">
+    <div class="input-card">
+      <textarea id="text" placeholder="Skriv din text på svenska här…" spellcheck="false"></textarea>
 
-<button onclick="runTranslate()">Översätt</button>
+      <div class="input-footer">
+        <div class="favorites-row">
+          <select id="favoriter">
+            <option>⭐ Favoriter</option>
+          </select>
+          <button class="btn-save" onclick="saveFavorite()">Spara</button>
+        </div>
+        <div class="buttons">
+          <button class="btn-secondary" onclick="translateAll()">Alla språk</button>
+          <button class="btn-primary" onclick="runTranslate()">
+            Översätt
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
 
-<button onclick="translateAll()">Alla språk</button>
+    <div class="lang-section">
+      <p class="section-label">Välj extra språk</p>
+      <div id="languages"></div>
+    </div>
 
-</div>
-
-<br>
-
-<select id="favoriter">
-<option>Favoriter</option>
-</select>
-
-<button onclick="saveFavorite()">Spara favorit</button>
-
-<h2>Språk</h2>
-
-<div id="languages"></div>
-
-<h2>Översättningar</h2>
-
-<div id="results"></div>
+    <div id="results-section" style="display:none">
+      <p class="section-label">Resultat</p>
+      <div id="results"></div>
+    </div>
+  </main>
 
 </div>
 
 <script src="script.js"></script>
+<script>
+  const observer = new MutationObserver(() => {
+    const sec = document.getElementById('results-section')
+    const res = document.getElementById('results')
+    sec.style.display = res.children.length > 0 ? 'block' : 'none'
+  })
+  observer.observe(document.getElementById('results'), { childList: true })
 
+  document.getElementById('text').addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'Enter') runTranslate()
+  })
+</script>
 </body>
 </html>
