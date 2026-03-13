@@ -24,8 +24,7 @@ const optionalLanguages = {
   mongolian: "Mongoliska",
   persian: "Persiska",
   thai: "Thailändska",
-  russian: "Ryska",
-  japanese: "Japanska"
+  russian: "Ryska"
 }
 
 const allLanguages = {
@@ -42,8 +41,7 @@ let selected = {
   mongolian: false,
   persian: false,
   thai: false,
-  russian: false,
-  japanese: false
+  russian: false
 }
 
 init()
