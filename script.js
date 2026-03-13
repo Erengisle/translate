@@ -47,6 +47,8 @@ let selected = {
 }
 
 init()
+function init() {
+  createLanguageGrid()
   createLanguageGrid()
   loadFavorites()
 
