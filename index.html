@@ -19,10 +19,6 @@
   </header>
 
   <main>
-    <div class="hero-text">
-      <h1>Håkans<br>översättningar</h1>
-    </div>
-
     <div class="input-card">
       <textarea id="text" placeholder="Skriv din text på svenska här…" spellcheck="false"></textarea>
 
@@ -68,6 +64,12 @@
   document.getElementById('text').addEventListener('keydown', e => {
     if (e.ctrlKey && e.key === 'Enter') runTranslate()
   })
+
+  // Fix: label-elementet inuti .langbox växlar annars checkboxen en extra gång
+  // vilket tar ut div-hanterarens växling i script.js → pillret verkar aldrig byta state
+  document.getElementById('languages').addEventListener('click', e => {
+    if (e.target.tagName === 'LABEL') e.preventDefault()
+  }, true)
 </script>
 </body>
 </html>
