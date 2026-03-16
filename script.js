@@ -17,15 +17,19 @@ const alwaysIncludedLanguages = {
 
 const optionalLanguages = {
   urdu: "Urdu",
-  arabic: "Arabiska",
   english: "Engelska",
+  greek: "Grekiska",
   turkish: "Turkiska",
-  dari: "Dari",
-  mongolian: "Mongoliska",
-  persian: "Persiska",
-  thai: "Thailändska",
+  tigrinya: "Tigrinja",
+  swahili: "Swahili",
+  bangla: "Bangla",
+  arabic: "Arabiska",
   russian: "Ryska",
-  japanese: "Japanska"
+  mandarin: "Kinesiska (Mandarin)",
+  thai: "Thailändska",
+  mongolian: "Mongoliska",
+  dari: "Dari",
+  persian: "Persiska"
 }
 
 const allLanguages = {
@@ -35,30 +39,24 @@ const allLanguages = {
 
 let selected = {
   urdu: false,
-  arabic: false,
   english: false,
+  greek: false,
   turkish: false,
-  dari: false,
-  mongolian: false,
-  persian: false,
-  thai: false,
+  tigrinya: false,
+  swahili: false,
+  bangla: false,
+  arabic: false,
   russian: false,
-  japanese: false
+  mandarin: false,
+  thai: false,
+  mongolian: false,
+  dari: false,
+  persian: false
 }
 
 init()
 
 function init() {
-  const saved = sessionStorage.getItem("auth")
-  if (saved !== "ok") {
-    const pw = prompt("Ange lösenord:")
-    if (pw !== "DITT_LÖSENORD") {
-      document.body.innerHTML = "<p style='font-family:sans-serif;padding:40px;color:#888'>Fel lösenord.</p>"
-      return
-    }
-    sessionStorage.setItem("auth", "ok")
-  }
-
   createLanguageGrid()
   loadFavorites()
 
