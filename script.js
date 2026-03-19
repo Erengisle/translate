@@ -114,6 +114,13 @@ async function runTranslate() {
 
   const customLang = document.getElementById("custom-lang").value.trim()
 
+  // Extrahera text inom citationstecken och ersätt med platshållare
+  const quotedPhrases = []
+  const textWithPlaceholders = text.replace(/"([^"]*)"/g, (match, quoted) => {
+    quotedPhrases.push(quoted)
+    return `__QUOTE_${quotedPhrases.length - 1}__`
+  })
+
   const langs = [
     ...Object.keys(alwaysIncludedLanguages),
     ...Object.entries(selected)
@@ -130,7 +137,7 @@ async function runTranslate() {
           apikey: anon,
           Authorization: `Bearer ${anon}`
         },
-        body: JSON.stringify({ text, language: lang })
+        body: JSON.stringify({ text: textWithPlaceholders, language: lang })
       })
 
       if (!res.ok) {
@@ -140,7 +147,14 @@ async function runTranslate() {
       }
 
       const data = await res.json()
-      createCard(allLanguages[lang], data.translation, text)
+      
+      // Återställ citerad text i översättningen
+      let finalTranslation = data.translation
+      quotedPhrases.forEach((phrase, index) => {
+        finalTranslation = finalTranslation.replace(`__QUOTE_${index}__`, `"${phrase}"`)
+      })
+      
+      createCard(allLanguages[lang], finalTranslation, text)
     } catch (error) {
       createCard(
         allLanguages[lang],
@@ -160,7 +174,7 @@ async function runTranslate() {
           apikey: anon,
           Authorization: `Bearer ${anon}`
         },
-        body: JSON.stringify({ text, language: customLang })
+        body: JSON.stringify({ text: textWithPlaceholders, language: customLang })
       })
 
       if (!res.ok) {
@@ -168,7 +182,14 @@ async function runTranslate() {
         createCard(customLang, `Fel vid översättning (${res.status}): ${errorText}`, text)
       } else {
         const data = await res.json()
-        createCard(customLang, data.translation, text)
+        
+        // Återställ citerad text i översättningen
+        let finalTranslation = data.translation
+        quotedPhrases.forEach((phrase, index) => {
+          finalTranslation = finalTranslation.replace(`__QUOTE_${index}__`, `"${phrase}"`)
+        })
+        
+        createCard(customLang, finalTranslation, text)
       }
     } catch (error) {
       createCard(customLang, `Nätverksfel: ${error?.message || "okänt fel"}`, text)
