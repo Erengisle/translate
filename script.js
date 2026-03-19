@@ -109,6 +109,17 @@ async function runTranslate() {
   const text = document.getElementById("text").value.trim()
   if (!text) return
 
+  // Hitta översätt-knappen och ge feedback
+  const translateBtn = document.querySelector('button[onclick="translate()"]') || 
+                       document.querySelector('button[onclick="runTranslate()"]')
+  
+  if (translateBtn) {
+    translateBtn.disabled = true
+    const originalText = translateBtn.innerText
+    translateBtn.innerText = "Översätter..."
+    translateBtn.style.opacity = "0.7"
+  }
+
   const results = document.getElementById("results")
   results.innerHTML = ""
 
@@ -194,6 +205,19 @@ async function runTranslate() {
     } catch (error) {
       createCard(customLang, `Nätverksfel: ${error?.message || "okänt fel"}`, text)
     }
+  }
+
+  // Återställ knappen med success-feedback
+  if (translateBtn) {
+    translateBtn.innerText = "✓ Klart!"
+    translateBtn.style.opacity = "1"
+    translateBtn.style.backgroundColor = "#10b981" // Grön färg
+    
+    setTimeout(() => {
+      translateBtn.innerText = "Översätt"
+      translateBtn.style.backgroundColor = "" // Återställ till original
+      translateBtn.disabled = false
+    }, 1500)
   }
 }
 
