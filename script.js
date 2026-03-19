@@ -18,7 +18,6 @@ const alwaysIncludedLanguages = {
 const optionalLanguages = {
   urdu: "Urdu",
   english: "Engelska",
-  greek: "Grekiska",
   turkish: "Turkiska",
   tigrinya: "Tigrinja",
   swahili: "Swahili",
@@ -40,7 +39,6 @@ const allLanguages = {
 let selected = {
   urdu: false,
   english: false,
-  greek: false,
   turkish: false,
   tigrinya: false,
   swahili: false,
