@@ -269,18 +269,19 @@ function createCard(lang, translation, originalText) {
   const qrDiv = document.createElement("div")
   qrDiv.className = "qr-code"
 
-  // Bygg URL med original + översättning inkodade
-  const viewUrl = `${viewBase}?lang=${encodeURIComponent(lang)}&orig=${encodeURIComponent(btoa(unescape(encodeURIComponent(originalText || ""))))}&trans=${encodeURIComponent(btoa(unescape(encodeURIComponent(translation))))}`
+  // Förkorta URL genom att bara inkludera översättningen (inte originalet)
+  // Detta gör QR-koden mindre och lättare att skanna
+  const viewUrl = `${viewBase}?lang=${encodeURIComponent(lang)}&text=${encodeURIComponent(translation)}`
 
   // Generera QR-kod (biblioteket läggs till i index.html)
   if (typeof QRCode !== "undefined") {
     new QRCode(qrDiv, {
       text: viewUrl,
-      width: 100,
-      height: 100,
-      colorDark: "#1a1a2e",
+      width: 120,
+      height: 120,
+      colorDark: "#000000",
       colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.L  // Lägre korrektionsnivå = enklare kod
     })
   }
 
