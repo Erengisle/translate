@@ -1,79 +1,90 @@
 <!DOCTYPE html>
-<html lang="sv">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Håkans översättningar</title>
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        padding-top: 60px;
+      }
 
-<div class="container">
+      .card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        width: 320px;
+      }
 
-  <header>
-    <div class="logo">
-      <span class="logo-icon">🌍</span>
-      <span class="logo-text">Håkans översättningar</span>
+      h2 {
+        margin-top: 0;
+        text-align: center;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #4a90e2;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background: #357ab8;
+      }
+
+      #status {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <h2>Skriv nytt ord</h2>
+
+      <input type="text" id="name" placeholder="Ditt namn">
+      <input type="text" id="word" placeholder="Skriv ett ord">
+
+      <button onclick="save()">Spara</button>
+
+      <div id="status"></div>
     </div>
-  </header>
 
-  <main>
-    <div class="input-card">
-      <textarea id="text" placeholder="Skriv din text på svenska här…" spellcheck="false"></textarea>
+    <script>
+      function save() {
+        const name = document.getElementById("name").value;
+        const word = document.getElementById("word").value;
 
-      <div class="input-footer">
-        <div class="favorites-row">
-          <select id="favoriter">
-            <option>⭐ Favoriter</option>
-          </select>
-          <button class="btn-save" onclick="saveFavorite()">Spara</button>
-        </div>
-        <div class="buttons">
-          <button class="btn-secondary" onclick="translateAll()">Alla språk</button>
-          <button class="btn-primary" onclick="runTranslate()">
-            Översätt
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
+        document.getElementById("status").innerText = "Sparar...";
 
-    <div class="lang-section">
-      <p class="section-label">Välj extra språk</p>
-      <div id="languages"></div>
-      <div class="custom-lang-row">
-        <input type="text" id="custom-lang" placeholder="Annat språk, t.ex. Finska…" autocomplete="off" spellcheck="false">
-      </div>
-    </div>
-
-    <div id="results-section" style="display:none">
-      <p class="section-label">Resultat</p>
-      <div id="results"></div>
-    </div>
-  </main>
-
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="script.js"></script>
-<script>
-  const observer = new MutationObserver(() => {
-    const sec = document.getElementById('results-section')
-    const res = document.getElementById('results')
-    sec.style.display = res.children.length > 0 ? 'block' : 'none'
-  })
-  observer.observe(document.getElementById('results'), { childList: true })
-
-  document.getElementById('text').addEventListener('keydown', e => {
-    if (e.ctrlKey && e.key === 'Enter') runTranslate()
-  })
-
-  // Fix: label-elementet inuti .langbox växlar annars checkboxen en extra gång
-  // vilket tar ut div-hanterarens växling i script.js → pillret verkar aldrig byta state
-  document.getElementById('languages').addEventListener('click', e => {
-    if (e.target.tagName === 'LABEL') e.preventDefault()
-  }, true)
-</script>
-</body>
+        google.script.run
+          .withSuccessHandler(function(response) {
+            document.getElementById("status").innerText = "✔ " + response;
+            document.getElementById("word").value = "";
+          })
+          .withFailureHandler(function(error) {
+            document.getElementById("status").innerText = "❌ " + error.message;
+          })
+          .saveWord(name, word);
+      }
+    </script>
+  </body>
 </html>
