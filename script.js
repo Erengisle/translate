@@ -55,6 +55,17 @@ let selected = {
 init()
 
 function init() {
+  // Lösenordsskydd
+  const saved = sessionStorage.getItem("auth")
+  if (saved !== "ok") {
+    const pw = prompt("Ange lösenord:")
+    if (pw !== "DITT_LÖSENORD_HÄR") {
+      document.body.innerHTML = "<p style='font-family:sans-serif;padding:40px;color:#888;text-align:center'>Fel lösenord.</p>"
+      return
+    }
+    sessionStorage.setItem("auth", "ok")
+  }
+
   createLanguageGrid()
   loadFavorites()
 
@@ -269,20 +280,31 @@ function createCard(lang, translation, originalText) {
   const qrDiv = document.createElement("div")
   qrDiv.className = "qr-code"
 
-  // Förkorta URL genom att bara inkludera översättningen (inte originalet)
-  // Detta gör QR-koden mindre och lättare att skanna
-  const viewUrl = `${viewBase}?lang=${encodeURIComponent(lang)}&text=${encodeURIComponent(translation)}`
+  // Begränsa textlängden för QR-kod (max 200 tecken)
+  // Längre texter gör QR-koden oläsbar
+  const truncatedText = translation.length > 200 
+    ? translation.substring(0, 197) + "..." 
+    : translation
 
-  // Generera QR-kod (biblioteket läggs till i index.html)
-  if (typeof QRCode !== "undefined") {
-    new QRCode(qrDiv, {
-      text: viewUrl,
-      width: 120,
-      height: 120,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.L  // Lägre korrektionsnivå = enklare kod
-    })
+  const viewUrl = `${viewBase}?lang=${encodeURIComponent(lang)}&text=${encodeURIComponent(truncatedText)}`
+
+  // Generera QR-kod endast om URL:en är rimligt kort
+  if (typeof QRCode !== "undefined" && viewUrl.length < 500) {
+    try {
+      new QRCode(qrDiv, {
+        text: viewUrl,
+        width: 150,
+        height: 150,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M  // Mellannivå - bättre för längre texter
+      })
+    } catch (error) {
+      console.error("QR code generation failed:", error)
+      qrDiv.innerHTML = '<p style="font-size:12px;color:#888;padding:10px;">QR-kod kunde inte skapas (texten är för lång)</p>'
+    }
+  } else if (viewUrl.length >= 500) {
+    qrDiv.innerHTML = '<p style="font-size:12px;color:#888;padding:10px;">Texten är för lång för QR-kod</p>'
   }
 
   qrWrap.appendChild(qrLabel)
