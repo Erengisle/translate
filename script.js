@@ -10,12 +10,11 @@ const viewBase = (() => {
   return location.origin + p + "view.html"
 })()
 
-const alwaysIncludedLanguages = {
-  spanish: "Spanska",
-  ukrainian: "Ukrainska"
-}
+const alwaysIncludedLanguages = {}
 
 const optionalLanguages = {
+  spanish: "Spanska",
+  ukrainian: "Ukrainska",
   urdu: "Urdu",
   english: "Engelska",
   turkish: "Turkiska",
@@ -37,6 +36,8 @@ const allLanguages = {
 }
 
 let selected = {
+  spanish: false,
+  ukrainian: false,
   urdu: false,
   english: false,
   turkish: false,
