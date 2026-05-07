@@ -181,14 +181,14 @@ button {
 }
 
 .btn-save {
-  background: transparent;
-  color: var(--muted);
-  font-size: 13px;
-  padding: 8px 12px;
+  background: var(--white);
+  color: var(--text);
+  font-size: 15px;
+  padding: 10px 18px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
 }
-.btn-save:hover { color: var(--text); background: var(--white); border-color: #ccc; }
+.btn-save:hover { background: var(--bg); border-color: #ccc; transform: translateY(-1px); }
 
 /* ---- Section labels ---- */
 .section-label {
